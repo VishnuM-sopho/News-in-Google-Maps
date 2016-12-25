@@ -77,22 +77,27 @@ function addMarker(place)
     // TODO
     var myLatlng = new google.maps.LatLng(place.latitude,place.longitude);
 
-    
+     var label = place["place_name"] + ", " + place["admin_name1"];
     var marker = new MarkerWithLabel({
         icon: "http://maps.google.com/mapfiles/kml/pal2/icon23.png",
 position: myLatlng,
     map: map,
-    title: '!'});
+    title: label});
 
-    
-     marker.addListener('click', togglewindow);
-     function togglewindow(){
-         window.open()
-         
-         
-         
-         
-     }
+    google.maps.event.addListener(marker, "click", function (e){ 
+        
+        marker.info.open(map, this);
+        var html = ["<ul>"];
+        $.getJSON("articles.php", parameter).done(function(data){
+            $.each(data, function(i, item){
+                html.push("<li><a href='"+item.link+"' target='_blank'>"+item.title+"</a></li>");
+            });
+            html.push("</ul>");
+            marker.info.setContent(html.join("\n"));
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            console.log(errorThrown.toString());
+        });
+    });
     
     
     markers.push(marker);
