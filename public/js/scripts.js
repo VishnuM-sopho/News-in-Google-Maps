@@ -83,6 +83,11 @@ function addMarker(place)
 position: myLatlng,
     map: map,
     title: label});
+    
+    
+     var parameter = "geo="+ place["postal_code"];
+    
+    
 
     google.maps.event.addListener(marker, "click", function (e){ 
         
