@@ -86,6 +86,11 @@ position: myLatlng,
     
     
      var parameter = "geo="+ place["postal_code"];
+     
+     marker.info = new google.maps.InfoWindow({
+       
+        content: "<div id='articles'><img id='loader' src='img/ajax-loader.gif' /></div>"
+    });
     
     
 
