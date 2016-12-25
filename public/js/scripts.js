@@ -82,8 +82,22 @@ function addMarker(place)
         icon: "http://maps.google.com/mapfiles/kml/pal2/icon23.png",
 position: myLatlng,
     map: map,
-    title: 'Hello World!'});
+    title: '!'});
+
+    
+     marker.addListener('click', togglewindow);
+     function togglewindow(){
+         window.open()
+         
+         
+         
+         
+     }
+    
+    
+    markers.push(marker);
 }
+
 
 /**
  * Configures application.
@@ -168,6 +182,10 @@ function hideInfo()
 function removeMarkers()
 {
     // TODO
+    for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+    marker.length=0;
+   // marker.setMap(null);
    // addMarker();
 }
 
