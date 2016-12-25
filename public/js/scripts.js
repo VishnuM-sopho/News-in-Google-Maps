@@ -75,29 +75,41 @@ $(function() {
 function addMarker(place)
 {
     // TODO
-    var myLatlng = new google.maps.LatLng(place.latitude,place.longitude);
 
-     var label = place["place_name"] + ", " + place["admin_name1"];
-    var marker = new MarkerWithLabel({
-        icon: "http://maps.google.com/mapfiles/kml/pal2/icon23.png",
-position: myLatlng,
-    map: map,
-    title: label});
-    
-    
-     var parameter = "geo="+ place["postal_code"];
-     
-     marker.info = new google.maps.InfoWindow({
-       
+    var myLatLong = new google.maps.LatLng(place.latitude, place.longitude);
+    var label = place["place_name"] + ", " + place["admin_name1"];
+   // var icon = "img/icon.png";
+
+    var listItems = [];
+
+    marker = new MarkerWithLabel({
+        position: myLatLong,
+         icon: "http://maps.google.com/mapfiles/kml/pal2/icon23.png",
+        map: map,
+        draggable: false,
+        labelContent: label,
+        animation: google.maps.Animation.DROP,
+        labelAnchor: new google.maps.Point(-18, 24),
+        labelInBackground: false
+    });
+
+    markers.push(marker);
+
+    var parameter = "geo="+ place["postal_code"];
+
+    // Create an info window
+    marker.info = new google.maps.InfoWindow({
+        // Set up the ajax loader gif
         content: "<div id='articles'><img id='loader' src='img/ajax-loader.gif' /></div>"
     });
-    
-    
 
+    // Add a click listener that will load the articles using ajax.
     google.maps.event.addListener(marker, "click", function (e){ 
         
         marker.info.open(map, this);
         var html = ["<ul>"];
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        
         $.getJSON("articles.php", parameter).done(function(data){
             $.each(data, function(i, item){
                 html.push("<li><a href='"+item.link+"' target='_blank'>"+item.title+"</a></li>");
@@ -110,9 +122,24 @@ position: myLatlng,
     });
     
     
-    markers.push(marker);
+    
+ marker.addListener('click', toggleBounce);
+ 
+    
 }
 
+      function toggleBounce() {
+          //marker.setAnimation(null);
+          this.setAnimation(google.maps.Animation.BOUNCE);
+          delay(1000);
+          this.setAnimation(null);
+          
+        /*if (marker.getAnimation() !== null) {
+          this.setAnimation(null);
+        } else {
+          this.setAnimation(google.maps.Animation.BOUNCE);
+        }*/
+      }
 
 /**
  * Configures application.
@@ -197,10 +224,10 @@ function hideInfo()
 function removeMarkers()
 {
     // TODO
-    for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(null);
-    marker.length=0;
-   // marker.setMap(null);
+    for(i=0;i<markers.length;i++)
+    markers[i].setMap(null);
+    
+    markers.length=0;
    // addMarker();
 }
 
